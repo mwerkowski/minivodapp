@@ -1,15 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
+import type { Show } from "../models/Show";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getShows } from "../services/apiShows";
 
 export function useShows() {
   const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
-    data: shows,
     error,
-  } = useQuery({
+  } = useInfiniteQuery<Show[], Error, InfiniteData<Show[]>, [string], number>({
     queryKey: ["shows"],
-    queryFn: getShows,
+    queryFn: ({ pageParam = 1 }) => getShows(pageParam.toString()),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage || lastPage.length === 0) return undefined;
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    },
   });
 
-  return { isLoading, shows, error };
+  return {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error,
+  };
 }

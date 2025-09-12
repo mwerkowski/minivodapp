@@ -1,5 +1,10 @@
-export async function getShows() {
-  const response: Response = await fetch("https://api.tvmaze.com/shows?page=1");
+export async function getShows(page: string) {
+  const response: Response = await fetch(
+    `https://api.tvmaze.com/shows?page=${page}`
+  );
+  if (response.status === 404) {
+    return [];
+  }
   if (!response.ok) throw Error(`Couldn't fetch shows data`);
   return await response.json();
 }

@@ -2,28 +2,25 @@ import { NavLink } from "react-router-dom";
 import Spinner from "./Spinner";
 import Error from "./Error";
 import { useShow } from "../hooks/useShow";
-import type { Show } from "../models/Show";
 import { useAppState } from "../hooks/useAppState";
 
 function ShowDetails() {
   const { currentShowTitle, setShowTitle, setPlay, isPlaying } = useAppState();
-  const {
-    isLoading,
-    show,
-    error,
-  }: { isLoading: boolean; show: Show; error: Error | null } = useShow();
+  const { isLoading, show, error } = useShow();
+  if (isLoading) return <Spinner />;
+  if (error || !show) return <Error />;
+
+  const { name, genres, image, summary } = show;
 
   function handlePLayButton() {
-    if (isPlaying && currentShowTitle === show.name) {
+    if (isPlaying && currentShowTitle === name) {
       setPlay(false);
     } else {
+      setPlay(true);
       setShowTitle(name);
     }
   }
 
-  if (isLoading) return <Spinner />;
-  if (error) return <Error />;
-  const { name, genres, image, summary } = show;
   return (
     <section className="p-6 border border-gray-700 bg-gray-800 shadow-md overflow-y-auto min-h-0">
       <div className="flex flex-row">
@@ -41,9 +38,7 @@ function ShowDetails() {
               className="flex rounded-md align-top bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none ml-2 min-w-24"
               type="button"
             >
-              {isPlaying && currentShowTitle === show.name
-                ? "⏹ Stop"
-                : "▶️ Play"}
+              {isPlaying && currentShowTitle === name ? "⏸️ Pause" : "▶️ Play"}
             </button>
           </div>
           <div className="flex flex-row pb-4">

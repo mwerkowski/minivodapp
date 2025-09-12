@@ -8,23 +8,61 @@ const videos = [
 ];
 
 function VideoPlayer() {
-  const { currentShowTitle, isPlaying } = useAppState();
-  const [videoSrc, setVideoSrc] = useState(videos[0]);
+  const { currentShowTitle, isPlaying, setPlay } = useAppState();
+  const [videoSrc, setVideoSrc] = useState<string | undefined>(undefined);
   const videoEl = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (!currentShowTitle) return;
-    const randomIndex = currentShowTitle.length % 3;
-    setVideoSrc(videos[randomIndex]);
+    const video = videoEl.current;
+    if (!video) return;
+    const handlePlay = () => setPlay(true);
+    const handlePause = () => setPlay(false);
+
+    video.addEventListener("play", handlePlay);
+    video.addEventListener("pause", handlePause);
+
+    return () => {
+      video.removeEventListener("play", handlePlay);
+      video.removeEventListener("pause", handlePause);
+    };
+  }, [setPlay]);
+
+  useEffect(() => {
+    if (!currentShowTitle) {
+      setVideoSrc(undefined);
+    } else {
+      const randomIndex = currentShowTitle.length % 3;
+      setVideoSrc(videos[randomIndex]);
+    }
   }, [currentShowTitle]);
 
   useEffect(() => {
-    if (!videoEl.current) return;
-    if (isPlaying) {
-      videoEl.current.play();
-    } else {
-      videoEl.current.pause();
-    }
+    const video = videoEl.current;
+    if (!video) return;
+
+    const updateSourceAndPlay = async () => {
+      if (!videoSrc) {
+        video.load();
+        return;
+      }
+      if (video.src !== videoSrc) {
+        video.src = videoSrc;
+        video.load();
+      }
+      if (isPlaying) {
+        try {
+          await video.play();
+        } catch (err) {
+          console.warn("Play error:", err);
+        }
+      } else {
+        video.pause();
+      }
+    };
+
+    updateSourceAndPlay().catch((err) => {
+      console.error("Video play failed:", err);
+    });
   }, [isPlaying, videoSrc]);
 
   return (
@@ -36,10 +74,12 @@ function VideoPlayer() {
         controls
         className="w-full h-[22rem] md:h-[32rem] shadow-lg"
       >
-        <source src={videoSrc} type="video/mp4" />
+        {videoSrc && <source src={videoSrc} type="video/mp4" />}
         Your browser does not support HTML5.
       </video>
-      <p className="text-sm">current video url: ({videoSrc})</p>
+      {currentShowTitle && (
+        <p className="text-sm">current video url: ({videoSrc})</p>
+      )}
     </div>
   );
 }

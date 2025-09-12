@@ -13,7 +13,7 @@ function reducer(state: AppState, action: Action): AppState {
     case "search":
       return { ...state, searchQuery: action.payload };
     case "showTitle":
-      return { ...state, currentShowTitle: action.payload, isPlaying: true };
+      return { ...state, currentShowTitle: action.payload };
     case "play":
       return { ...state, isPlaying: action.payload };
     default:
