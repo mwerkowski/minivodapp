@@ -1,16 +1,14 @@
 import { lazy } from "react";
-import {
-  Navigate,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AppStateContextProvider } from "./contexts/AppStateContextProvider";
 
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
-const Movies = lazy(() => import("./pages/Movies"));
 const AppLayout = lazy(() => import("./pages/AppLayout"));
-const VideoPlayer = lazy(() => import("./pages/Video"));
+const ShowDetail = lazy(() => import("./components/ShowDetails"));
+const MainContent = lazy(() => import("./components/MainContent"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,15 +24,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate replace to="movies" />,
+        element: <Navigate replace to="shows" />,
       },
       {
-        path: "movies",
-        element: <Movies />,
-      },
-      {
-        path: "movies/:id",
-        element: <VideoPlayer />,
+        path: "shows",
+        element: <MainContent />,
+        children: [
+          {
+            path: ":id",
+            element: <ShowDetail />,
+          },
+        ],
       },
     ],
   },
@@ -46,10 +46,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <AppStateContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </AppStateContextProvider>
   );
 }
 
