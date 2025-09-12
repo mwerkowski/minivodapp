@@ -7,7 +7,9 @@ function MainContent() {
 
   return (
     <div
-      className={`grid grid-cols-1 md:grid-cols-${id ? "2" : "1"} gap-4 h-96`}
+      className={`grid grid-cols-1 ${
+        id ? "md:grid-cols-2" : "md:grid-cols-1"
+      } gap-4 h-96`}
     >
       <div className="flex flex-col border border-gray-700 bg-gray-800 shadow-md min-h-0">
         <div className="p-2 border-b border-gray-700">
