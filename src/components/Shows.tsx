@@ -50,7 +50,7 @@ function Shows() {
       );
     }
   }, [
-    rowVirtualizer.getVirtualItems(),
+    rowVirtualizer,
     filteredShows.length,
     hasNextPage,
     isFetchingNextPage,

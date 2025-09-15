@@ -1,69 +1,98 @@
-# React + TypeScript + Vite
+# Mini VOD App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mini Video On Demand (VOD) web application built with **React**, **TypeScript**, **Vite**, and **Tailwind CSS**. It features virtualized lists, search, show details, and a sample video player for viewing TV series from [TVMaze API](https://www.tvmaze.com/api).
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Browse TV shows from the [TVmaze API](https://www.tvmaze.com/api)
+- Infinite scrolling with virtualized list for performance
+- Search shows by name
+- View show details and genres
+- Play sample videos for selected shows
+- Responsive and modern UI with Tailwind CSS
+- State management using React Context and custom hooks
+- Data fetching and caching with React Query
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Node.js](https://nodejs.org/) (v18 or newer recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Start the development server:
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm run dev
 ```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Build
+
+To build for production:
+
+```sh
+npm run build
+```
+
+Preview the production build:
+
+```sh
+npm run preview
+```
+
+### Lint
+
+To lint the codebase:
+
+```sh
+npm run lint
+```
+
+## Project Structure
+
+```
+src/
+  components/      # Reusable UI components
+  contexts/        # React Context for app state
+  hooks/           # Custom React hooks
+  models/          # TypeScript types/interfaces
+  pages/           # Page/layout components
+  services/        # API calls
+  assets/          # Static assets
+  App.tsx          # App entry point
+  main.tsx         # ReactDOM render
+```
+
+## Technologies Used
+
+- [React 18](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [React Router](https://reactrouter.com/)
+- [TanStack Query](https://tanstack.com/query/latest)
+- [TanStack Virtual](https://tanstack.com/virtual/latest)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## API
+
+Data comes from the public [TVMaze API](https://www.tvmaze.com/api).
+
+- **Shows list (paginated, 250 per page)**  
+  `GET https://api.tvmaze.com/shows?page={page}`
+
+- **Show details**  
+  `GET https://api.tvmaze.com/shows/{id}`
+
+## License
+
+MIT
